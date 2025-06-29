@@ -1,16 +1,23 @@
 import pygame
 
+from game_object import GameObject
 
-class State:
 
-    def __init__(self) -> None:
-        pass
+class State(GameObject):
+
+    def __init__(self, bg: tuple) -> None:
+        self.objects: list[GameObject] = []
+        self.bg = bg
 
     def tick(self):
-        pass
+        for o in self.objects:
+            o.tick()
 
     def render(self, screen: pygame.Surface):
-        pass
+        screen.fill(self.bg)
+        for o in self.objects:
+            o.render(screen)
 
     def key_down(self, key: int):
-        pass
+        for o in self.objects:
+            o.key_down(key)

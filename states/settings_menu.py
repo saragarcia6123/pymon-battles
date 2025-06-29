@@ -8,7 +8,7 @@ from settings import key_bindings
 class SettingsMenu(State):
 
     def __init__(self, prev_state: State | None) -> None:
-        super().__init__()
+        super().__init__((0, 0, 0))
         self.selected = 0
         self.prev_state = prev_state
 
