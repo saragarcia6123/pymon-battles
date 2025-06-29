@@ -1,8 +1,9 @@
 import pygame
 
 from game import Game
-from game_object import Sprite
+from pokemon_ids import POKE_ID_MAP
 from resources import DEFAULT_FONT, TITLE_FONT
+from sprite_loader import SpriteLoader
 from state import State
 from settings import key_bindings
 
@@ -12,25 +13,33 @@ class StartMenu(State):
     options = ["play", "settings", "exit"]
 
     def __init__(self) -> None:
-        super().__init__((0, 0, 100))
+        super().__init__((20, 20, 50))
         self.selected = 0
         self.init_title()
         self.init_menu()
+        self.background = pygame.image.load("res/backgrounds/start_menu.png")
+        self.background_rect = self.background.get_rect(
+            center=(int(Game().WIDTH / 2), int(Game().HEIGHT / 2))
+        )
+        self.pikachu_front = SpriteLoader().get_sprite(
+            POKE_ID_MAP["pikachu"], "battle_front"
+        )
         self.update_options()
 
     def init_title(self):
-        title = TITLE_FONT.render("PyMon Battles!", True, (255, 255, 0))
-        title_rect = title.get_rect()
-        title_rect.centerx = int(Game().WIDTH / 2)
-        title_rect.centery = int(Game().HEIGHT * 0.25)
-        self.title_object = Sprite(title, title_rect)
+        self.title_object = TITLE_FONT.render("PyMon Battles!", True, (255, 255, 0))
+        self.title_rect = self.title_object.get_rect()  # Store the rect
+        self.title_rect.centerx = int(Game().WIDTH / 2)
+        self.title_rect.centery = int(Game().HEIGHT * 0.25)
 
     def init_menu(
         self,
         offset: int = Game().HEIGHT - 250,
         gap: int = 50,
     ):
-        self.option_text_objects: list[Sprite] = []
+        self.option_text_objects: list[pygame.Surface] = []
+        self.option_text_rects: list[pygame.Rect] = []  # Store rects for options
+
         for i, option in enumerate(self.options):
             option_text = DEFAULT_FONT.render(option, True, (255, 255, 255))
             option_text_rect = option_text.get_rect()
@@ -38,15 +47,15 @@ class StartMenu(State):
             option_text_rect.centerx = int(Game().WIDTH / 2)
             option_text_rect.centery = offset + i * gap
 
-            option_object = Sprite(option_text, option_text_rect)
-            self.option_text_objects.append(option_object)
+            self.option_text_objects.append(option_text)
+            self.option_text_rects.append(option_text_rect)  # Store the positioned rect
 
     def update_options(self):
         for i in range(len(self.option_text_objects)):
             if i == self.selected:
-                self.option_text_objects[i].source.set_alpha(255)
+                self.option_text_objects[i].set_alpha(255)
             else:
-                self.option_text_objects[i].source.set_alpha(150)
+                self.option_text_objects[i].set_alpha(150)
 
     def key_down(self, key: int):
         if key == key_bindings["a"]:
@@ -63,9 +72,14 @@ class StartMenu(State):
 
     def render(self, screen: pygame.Surface):
         super().render(screen)
-        self.title_object.render(screen)
-        for o in self.option_text_objects:
-            o.render(screen)
+        screen.blit(self.background, self.background_rect)
+        # Use the stored positioned rect for title
+        screen.blit(self.title_object, self.title_rect)
+
+        # Use the stored positioned rects for options
+        for i, option_surface in enumerate(self.option_text_objects):
+            screen.blit(option_surface, self.option_text_rects[i])
+        screen.blit(self.pikachu_front, (150, 50))
 
     def on_select(self):
         match self.selected:

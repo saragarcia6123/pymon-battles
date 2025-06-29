@@ -3,8 +3,8 @@ import pygame
 from entity import Entity
 from game import Game
 from resources import DEFAULT_FONT
-import settings
 from settings import key_bindings
+from states.settings_menu import current_settings
 
 
 class DialogBox(Entity):
@@ -172,7 +172,7 @@ class DialogBox(Entity):
     def tick(self):
         if not self.is_current_page_complete():
             self.ticks += 1
-            delay = self.text_delay_map[settings.text_speed]
+            delay = self.text_delay_map[current_settings["text-speed"]]
             if self.ticks % delay == 0:
                 self.letter_state += 1
                 self.set_text_object()

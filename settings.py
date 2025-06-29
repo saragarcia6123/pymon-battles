@@ -1,8 +1,6 @@
 import pygame
 
 
-text_speed = 1
-
 key_bindings: dict[str, int] = {
     "a": pygame.K_x,
     "b": pygame.K_z,

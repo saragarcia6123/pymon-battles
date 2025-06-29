@@ -19,7 +19,6 @@ class Game:
     HEIGHT = 500
 
     def init(self) -> None:
-
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.clock = pygame.time.Clock()
 
@@ -27,6 +26,8 @@ class Game:
         self.running = False
         self.ticks = 0
         self.timer = 0
+        self.player_name = "RED"
+        self.player_starter: int = 0
 
     def start(self):
         if self.running:
