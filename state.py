@@ -1,12 +1,12 @@
 import pygame
 
-from game_object import GameObject
+from entity import Entity
 
 
-class State(GameObject):
+class State:
 
     def __init__(self, bg: tuple) -> None:
-        self.objects: list[GameObject] = []
+        self.objects: list[Entity] = []
         self.bg = bg
 
     def tick(self):

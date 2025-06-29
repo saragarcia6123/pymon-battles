@@ -1,7 +1,7 @@
 import pygame
 
 from game import Game
-from game_object import GameObject
+from game_object import Sprite
 from resources import DEFAULT_FONT, TITLE_FONT
 from state import State
 from settings import key_bindings
@@ -23,15 +23,14 @@ class StartMenu(State):
         title_rect = title.get_rect()
         title_rect.centerx = int(Game().WIDTH / 2)
         title_rect.centery = int(Game().HEIGHT * 0.25)
-        self.title_object = GameObject(title, title_rect)
-        self.objects.append(self.title_object)
+        self.title_object = Sprite(title, title_rect)
 
     def init_menu(
         self,
         offset: int = Game().HEIGHT - 250,
         gap: int = 50,
     ):
-        self.option_text_objects: list[GameObject] = []
+        self.option_text_objects: list[Sprite] = []
         for i, option in enumerate(self.options):
             option_text = DEFAULT_FONT.render(option, True, (255, 255, 255))
             option_text_rect = option_text.get_rect()
@@ -39,9 +38,8 @@ class StartMenu(State):
             option_text_rect.centerx = int(Game().WIDTH / 2)
             option_text_rect.centery = offset + i * gap
 
-            option_object = GameObject(option_text, option_text_rect)
+            option_object = Sprite(option_text, option_text_rect)
             self.option_text_objects.append(option_object)
-            self.objects.append(option_object)
 
     def update_options(self):
         for i in range(len(self.option_text_objects)):
@@ -65,6 +63,9 @@ class StartMenu(State):
 
     def render(self, screen: pygame.Surface):
         super().render(screen)
+        self.title_object.render(screen)
+        for o in self.option_text_objects:
+            o.render(screen)
 
     def on_select(self):
         match self.selected:

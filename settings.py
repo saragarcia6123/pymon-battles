@@ -1,14 +1,7 @@
 import pygame
 
 
-available_settings = {
-    "Text Speed": ["Slow", "Normal", "Fast"],
-    "Difficulty": ["Easy", "Medium", "Hard"],
-}
-
-current_settings = {
-    key: options_list[1] for key, options_list in available_settings.items()
-}
+text_speed = 1
 
 key_bindings: dict[str, int] = {
     "a": pygame.K_x,

@@ -25,6 +25,8 @@ class Game:
 
         self.STATE: State | None = None
         self.running = False
+        self.ticks = 0
+        self.timer = 0
 
     def start(self):
         if self.running:
@@ -37,6 +39,9 @@ class Game:
         self.running = False
 
     def tick(self):
+        self.ticks += 1
+        if self.ticks % 60 == 0:
+            self.timer += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.stop()
