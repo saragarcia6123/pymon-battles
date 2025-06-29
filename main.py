@@ -4,10 +4,10 @@ import pygame
 pygame.init()
 
 from game import Game
-from states.start_screen import StartScreen
+from states.start_menu import StartMenu
 
 game = Game()
-game.STATE = StartScreen()
+game.STATE = StartMenu()
 game.start()
 
 while game.running:
