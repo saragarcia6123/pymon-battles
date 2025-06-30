@@ -1,12 +1,13 @@
 import pygame
 
-from sprite_loader import SpriteLoader
+from resource_loader import ResourceLoader
+
 
 
 pygame.init()
 
-loader = SpriteLoader()
-loader.load_sprite_sheets()
+loader = ResourceLoader()
+loader.load_sprite_sheet("pokemon")
 
 from game import Game
 from states.start_menu import StartMenu

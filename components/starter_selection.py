@@ -3,8 +3,8 @@ import pygame
 
 from entity import Entity
 from game import Game
-from sprite_loader import SpriteLoader
-from settings import key_bindings
+from resource_loader import ResourceLoader
+from settings import DIMENSIONS, key_bindings
 
 
 class StarterSelection(Entity):
@@ -12,10 +12,9 @@ class StarterSelection(Entity):
     def __init__(self, on_enter: Callable[[int], None]) -> None:
         super().__init__()
         self.on_enter = on_enter
-        self.selected = 1  # the middle
-        self.starter_sprites = [
-            SpriteLoader().get_sprite(i, "battle_front") for i in [1, 4, 7]
-        ]
+        self.selected = 1
+        sprites = ResourceLoader().load_sprite_group("pokemon_battle_front")
+        self.starter_sprites = [sprites[i-1] for i in [1, 4, 7]]
         self.sprite_width = 64
         self.sprite_height = 64
 
@@ -38,8 +37,8 @@ class StarterSelection(Entity):
         )
 
         # Center horizontally on screen
-        start_x = (Game().WIDTH - total_width) // 2
-        center_y = Game().HEIGHT // 2
+        start_x = (DIMENSIONS[0] - total_width) // 2
+        center_y = DIMENSIONS[1] // 2
 
         # Store sprite positions
         self.sprite_positions = []

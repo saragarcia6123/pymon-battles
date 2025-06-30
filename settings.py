@@ -12,3 +12,5 @@ key_bindings: dict[str, int] = {
     "right": pygame.K_RIGHT,
     "toggle_fullscreen": pygame.K_ESCAPE,
 }
+
+DIMENSIONS = (500, 500)

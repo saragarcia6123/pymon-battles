@@ -1,10 +1,10 @@
+from collections.abc import Callable
 from typing import Literal
 import pygame
 
-from game import Game
 from resources import DEFAULT_FONT, TITLE_FONT
 from state import State
-from settings import key_bindings
+from settings import DIMENSIONS, key_bindings
 
 
 type SettingsKey = Literal["text-speed", "difficulty"]
@@ -22,14 +22,17 @@ class SettingsMenu(State):
         "difficulty": ["EASY", "MEDIUM", "HARD"],
     }
 
-    def __init__(self, prev_state: State | None) -> None:
+    def __init__(
+        self, prev_state: State | None, on_back: Callable[[State | None], None]
+    ) -> None:
         super().__init__((20, 20, 50))
         self.selected = 0
         self.prev_state = prev_state
+        self.on_back = on_back
 
         self.background = pygame.image.load("res/backgrounds/start_menu.png")
         self.background_rect = self.background.get_rect(
-            center=(int(Game().WIDTH / 2), int(Game().HEIGHT / 2))
+            center=(int(DIMENSIONS[0] / 2), int(DIMENSIONS[1] / 2))
         )
 
         self.init_title()
@@ -39,12 +42,12 @@ class SettingsMenu(State):
     def init_title(self):
         self.title_object = TITLE_FONT.render("Settings", True, (255, 255, 0))
         self.title_rect = self.title_object.get_rect()  # Store the rect
-        self.title_rect.centerx = int(Game().WIDTH / 2)
-        self.title_rect.centery = int(Game().HEIGHT * 0.25)
+        self.title_rect.centerx = int(DIMENSIONS[0] / 2)
+        self.title_rect.centery = int(DIMENSIONS[1] * 0.25)
 
     def init_settings(
         self,
-        offset: int = Game().HEIGHT - 250,
+        offset: int = DIMENSIONS[1] - 250,
         gap: int = 80,
     ):
         self.setting_labels: list[pygame.Surface] = []
@@ -65,7 +68,7 @@ class SettingsMenu(State):
             label_text = key.replace("-", " ").title()
             label_object = DEFAULT_FONT.render(label_text, True, (255, 255, 255))
             label_rect = label_object.get_rect()
-            label_rect.centerx = int(Game().WIDTH * 0.35)
+            label_rect.centerx = int(DIMENSIONS[0] * 0.35)
             label_rect.centery = offset + i * gap
             self.setting_labels.append(label_object)
             self.setting_label_rects.append(label_rect)  # Store rect
@@ -75,7 +78,7 @@ class SettingsMenu(State):
             value_text = self.game_settings[key][current_value]
             value_object = DEFAULT_FONT.render(value_text, True, (255, 255, 255))
             value_rect = value_object.get_rect()
-            value_rect.centerx = int(Game().WIDTH * 0.65)
+            value_rect.centerx = int(DIMENSIONS[0] * 0.65)
             value_rect.centery = offset + i * gap
             self.setting_values.append(value_object)
             self.setting_value_rects.append(value_rect)  # Store rect
@@ -83,14 +86,14 @@ class SettingsMenu(State):
             # Create arrows
             left_arrow = DEFAULT_FONT.render("<", True, (255, 255, 255))
             left_rect = left_arrow.get_rect()
-            left_rect.centerx = int(Game().WIDTH * 0.55)
+            left_rect.centerx = int(DIMENSIONS[0] * 0.55)
             left_rect.centery = offset + i * gap
             self.setting_arrows_left.append(left_arrow)
             self.setting_arrow_left_rects.append(left_rect)  # Store rect
 
             right_arrow = DEFAULT_FONT.render(">", True, (255, 255, 255))
             right_rect = right_arrow.get_rect()
-            right_rect.centerx = int(Game().WIDTH * 0.75)
+            right_rect.centerx = int(DIMENSIONS[0] * 0.75)
             right_rect.centery = offset + i * gap
             self.setting_arrows_right.append(right_arrow)
             self.setting_arrow_right_rects.append(right_rect)  # Store rect
@@ -138,7 +141,7 @@ class SettingsMenu(State):
     def key_down(self, key: int):
         super().key_down(key)
         if key == key_bindings["b"]:
-            Game().STATE = self.prev_state
+            self.on_back(self.prev_state)
         if key == key_bindings["up"]:
             self.selected = (self.selected - 1) % len(self.game_settings)
             self.update_options()

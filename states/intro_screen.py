@@ -1,4 +1,3 @@
-from pygame import Surface
 import pygame
 
 from components.dialog_box import DialogBox
@@ -6,6 +5,8 @@ from components.name_selection import NameSelection
 from components.starter_selection import StarterSelection
 from entity import Entity
 from game import Game
+from resource_loader import ResourceLoader
+from settings import DIMENSIONS
 from state import State
 from states.battle import Battle
 
@@ -24,10 +25,9 @@ class IntroScreen(State):
 
     def __init__(self) -> None:
         super().__init__((255, 255, 255))
-
-        self.oak_sprite = pygame.image.load("res/sprites/oak.png")
+        self.oak_sprite = ResourceLoader().load_sprite("res/sprites/oak.png")
         self.oak_sprite_rect = self.oak_sprite.get_rect(
-            center=(int(Game().WIDTH / 2), int(Game().HEIGHT * 0.3))
+            center=(int(DIMENSIONS[0] / 2), int(DIMENSIONS[1] * 0.3))
         )
 
         # Create dialogs with proper callbacks
@@ -122,7 +122,7 @@ class IntroScreen(State):
     def tick(self):
         super().tick()
 
-    def render(self, screen: Surface):
+    def render(self, screen: pygame.Surface):
         super().render(screen)
         screen.blit(self.oak_sprite, self.oak_sprite_rect)
 

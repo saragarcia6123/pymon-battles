@@ -1,10 +1,8 @@
 from collections.abc import Callable
 import pygame
 from entity import Entity
-from game import Game
 from resources import DEFAULT_FONT
-from settings import key_bindings
-from states.settings_menu import current_settings
+from settings import DIMENSIONS, key_bindings
 
 
 class DialogBox(Entity):
@@ -20,9 +18,9 @@ class DialogBox(Entity):
         self.objects = []
         self.ticks = 0
         self.letter_state = 0
-        self.width = int(Game().WIDTH * 0.9)
-        self.height = int(Game().HEIGHT * 0.2)
-        self.border_gap = int((Game().WIDTH - self.width) / 2)
+        self.width = int(DIMENSIONS[0] * 0.9)
+        self.height = int(DIMENSIONS[1] * 0.2)
+        self.border_gap = int((DIMENSIONS[0] - self.width) / 2)
         self.on_close = on_close
         avg_char_width = DEFAULT_FONT.size("A")[0]
         self.letters_per_line = self.width // avg_char_width
@@ -34,7 +32,7 @@ class DialogBox(Entity):
 
         # Calculate dialog box position
         self.dialog_x = self.border_gap
-        self.dialog_y = Game().HEIGHT - self.height - self.border_gap
+        self.dialog_y = DIMENSIONS[1] - self.height - self.border_gap
 
         self.set_text_object()
 
@@ -157,7 +155,7 @@ class DialogBox(Entity):
         # Positioning with more padding
         start_x = self.border_gap + 20  # More padding from left edge
         start_y = (
-            Game().HEIGHT - self.height - self.border_gap + 20
+            DIMENSIONS[1] - self.height - self.border_gap + 20
         )  # More padding from top inside box
 
         self.text_positions = []
@@ -172,6 +170,8 @@ class DialogBox(Entity):
     def tick(self):
         if not self.is_current_page_complete():
             self.ticks += 1
+            from states.settings_menu import current_settings
+
             delay = self.text_delay_map[current_settings["text-speed"]]
             if self.ticks % delay == 0:
                 self.letter_state += 1

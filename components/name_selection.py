@@ -3,7 +3,7 @@ from typing import Callable
 from entity import Entity
 from game import Game
 from resources import DEFAULT_FONT
-from settings import key_bindings
+from settings import DIMENSIONS, key_bindings
 
 
 class NameSelection(Entity):
@@ -24,9 +24,9 @@ class NameSelection(Entity):
         ]
 
         # Dialog dimensions (same as DialogBox)
-        self.width = int(Game().WIDTH * 0.9)
-        self.height = int(Game().HEIGHT * 0.2)
-        self.border_gap = int((Game().WIDTH - self.width) / 2)
+        self.width = int(DIMENSIONS[0] * 0.9)
+        self.height = int(DIMENSIONS[1] * 0.2)
+        self.border_gap = int((DIMENSIONS[0] - self.width) / 2)
 
         # Name display dimensions
         self.name_height = 60
@@ -38,7 +38,7 @@ class NameSelection(Entity):
 
         # Calculate positions
         self.dialog_x = self.border_gap
-        self.dialog_y = Game().HEIGHT - self.height - self.border_gap
+        self.dialog_y = DIMENSIONS[1] - self.height - self.border_gap
 
         self.name_x = self.border_gap
         self.name_y = self.dialog_y - self.name_height - self.name_gap

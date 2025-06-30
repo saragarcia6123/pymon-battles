@@ -2,10 +2,10 @@ import pygame
 
 from game import Game
 from pokemon_ids import POKE_ID_MAP
+from resource_loader import ResourceLoader
 from resources import DEFAULT_FONT, TITLE_FONT
-from sprite_loader import SpriteLoader
 from state import State
-from settings import key_bindings
+from settings import DIMENSIONS, key_bindings
 
 
 class StartMenu(State):
@@ -19,22 +19,21 @@ class StartMenu(State):
         self.init_menu()
         self.background = pygame.image.load("res/backgrounds/start_menu.png")
         self.background_rect = self.background.get_rect(
-            center=(int(Game().WIDTH / 2), int(Game().HEIGHT / 2))
+            center=(int(DIMENSIONS[0] / 2), int(DIMENSIONS[1] / 2))
         )
-        self.pikachu_front = SpriteLoader().get_sprite(
-            POKE_ID_MAP["pikachu"], "battle_front"
-        )
+        sprites = ResourceLoader().load_sprite_group("pokemon_battle_front")
+        self.pikachu_front = sprites[POKE_ID_MAP["pikachu"]-1]
         self.update_options()
 
     def init_title(self):
         self.title_object = TITLE_FONT.render("PyMon Battles!", True, (255, 255, 0))
         self.title_rect = self.title_object.get_rect()  # Store the rect
-        self.title_rect.centerx = int(Game().WIDTH / 2)
-        self.title_rect.centery = int(Game().HEIGHT * 0.25)
+        self.title_rect.centerx = int(DIMENSIONS[0] / 2)
+        self.title_rect.centery = int(DIMENSIONS[1] * 0.25)
 
     def init_menu(
         self,
-        offset: int = Game().HEIGHT - 250,
+        offset: int = DIMENSIONS[1] - 250,
         gap: int = 50,
     ):
         self.option_text_objects: list[pygame.Surface] = []
@@ -44,7 +43,7 @@ class StartMenu(State):
             option_text = DEFAULT_FONT.render(option, True, (255, 255, 255))
             option_text_rect = option_text.get_rect()
 
-            option_text_rect.centerx = int(Game().WIDTH / 2)
+            option_text_rect.centerx = int(DIMENSIONS[0] / 2)
             option_text_rect.centery = offset + i * gap
 
             self.option_text_objects.append(option_text)

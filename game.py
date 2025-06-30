@@ -1,6 +1,7 @@
 from typing import Literal
 import pygame
 
+from settings import DIMENSIONS
 from state import State
 
 type StateType = Literal["start", "settings", "intro"]
@@ -15,11 +16,8 @@ class Game:
             cls._instance.init()
         return cls._instance
 
-    WIDTH = 500
-    HEIGHT = 500
-
     def init(self) -> None:
-        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
+        self.screen = pygame.display.set_mode(DIMENSIONS)
         self.clock = pygame.time.Clock()
 
         self.STATE: State | None = None
@@ -67,8 +65,12 @@ class Game:
             case "settings":
                 from states.settings_menu import SettingsMenu
 
-                self.STATE = SettingsMenu(self.STATE)
+                self.STATE = SettingsMenu(prev_state=self.STATE, on_back=self.set_state)
             case "intro":
                 from states.intro_screen import IntroScreen
 
                 self.STATE = IntroScreen()
+
+    def set_state(self, state: State | None):
+        if state:
+            self.STATE = state
